@@ -2,46 +2,51 @@
   <div class="index">
     <headerui :title="title"></headerui>
     <!-- 中间主体内容 -->
-    <div class="main" ref="main">
-      <!-- 中间顶部轮播图 -->
-      <div class="swiper">
-        <mt-swipe :show-indicators="false" :auto="0" @change="swiperChange">
-          <mt-swipe-item>
-            <a href="#"><img class="swiper-img" src="../../assets/swiper1.jpg" alt=""></a>
-          </mt-swipe-item>
-          <mt-swipe-item><img class="swiper-img" src="../../assets/swiper2.jpg" alt=""></mt-swipe-item>
-          <mt-swipe-item><img class="swiper-img" src="../../assets/swiper3.jpg" alt=""></mt-swipe-item>
-        </mt-swipe>
-      </div>
-      <!-- nav栏 && 商品栏-->
-      <div class="nav" :class="{isFixed: Fixed}" ref="nav">
-        <mt-navbar v-model="selected" :class="{'nav-box': true, 'an-nav-box': allNav}" @click.native="clickNav">
-          <mt-tab-item v-for="(item, index) in navList" :id="index" class="nav-item" :key="index">
-            选项{{item}}
-          </mt-tab-item>
-        </mt-navbar>
-        <!-- 展开icon 大于5时显示,否则隐藏 class是展开/隐藏时候icon要旋转180°-->
-        <div class="an-icon" v-if="navList.length > 5" @click="anNav">
-          <i :class="{'an-icon-origin': allNav}">↓</i>
+    <mt-loadmore :top-method="loadTop" ref="loadmoreMain" class="main-box">
+      <div class="main" ref="main">
+        <!-- 中间顶部轮播图 -->
+        <div class="swiper">
+          <mt-swipe :show-indicators="false" :auto="0" @change="swiperChange">
+            <mt-swipe-item>
+              <a href="#"><img class="swiper-img" src="../../assets/swiper1.jpg" alt=""></a>
+            </mt-swipe-item>
+            <mt-swipe-item><img class="swiper-img" src="../../assets/swiper2.jpg" alt=""></mt-swipe-item>
+            <mt-swipe-item><img class="swiper-img" src="../../assets/swiper3.jpg" alt=""></mt-swipe-item>
+          </mt-swipe>
+        </div>
+        <!-- nav栏 && 商品栏-->
+        <div class="nav" :class="{isFixed: Fixed}" ref="nav">
+          <mt-navbar v-model="selected" :class="{'nav-box': true, 'an-nav-box': allNav}" @click.native="clickNav">
+            <mt-tab-item v-for="(item, index) in navList" :id="index" class="nav-item" :key="index">
+              选项{{item}}
+            </mt-tab-item>
+          </mt-navbar>
+          <!-- 展开icon 大于5时显示,否则隐藏 class是展开/隐藏时候icon要旋转180°-->
+          <div class="an-icon" v-if="navList.length > 5" @click="anNav">
+            <i :class="{'an-icon-origin': allNav}">↓</i>
+          </div>
+        </div>
+        <!-- 商品栏 -->
+        <div class="goods" :class="{'goods-Ceiling': Fixed}">
+          <mt-loadmore :bottom-method="loadBottom" :bottom-all-loaded="false" :bottomDistance='50' ref="loadmore">
+            <mt-tab-container v-model="selected" class="item-box">
+              <mt-tab-container-item v-for="(item, index) in navList" :id="index" class="item" :key="index">
+                <div class="item-main" v-for="(ite,i) in goodsList" @click="goodsDetails(ite,index)" :key="i">
+                  <div class="goods-img">
+                    <img src="../../assets/swiper2.jpg" alt="">
+                  </div>
+                  <div class='goods-info'>
+                    <span class="goods-name"> 商品名称 </span>
+                    <span class="goods-prices"> 888.88 积分</span>
+                  </div>
+                </div>
+              </mt-tab-container-item>
+            </mt-tab-container>
+          </mt-loadmore>
         </div>
       </div>
-      <!-- 商品栏 -->
-      <div class="goods" :class="{'goods-Ceiling': Fixed}">
-        <mt-tab-container v-model="selected" class="item-box">
-          <mt-tab-container-item v-for="(item, index) in navList" :id="index" class="item" :key="index">
-            <div class="item-main" v-for="(ite,i) in goodsList" @click="goodsDetails(ite)" :key="i">
-              <div class="goods-img">
-                <img src="../../assets/swiper2.jpg" alt="">
-              </div>
-              <div class='goods-info'>
-                <span class="goods-name"> 商品名称 </span>
-                <span class="goods-prices"> 888.88 积分</span>
-              </div>
-            </div>
-          </mt-tab-container-item>
-        </mt-tab-container>
-      </div>
-    </div>
+    </mt-loadmore>
+
     <footer-bar></footer-bar>
   </div>
 </template>
@@ -110,15 +115,29 @@ export default {
       console.log('展开nav')
       this.allNav = !this.allNav
     },
+    // 点击商品 进入商品详情页
+    goodsDetails(item, index) {
+      console.log('点击商品 进入商品详情页')
+      console.log(item, index)
+      this.$router.push({ name: 'goodsDetails', params:{ id:index} })
+    },
+    // 下拉刷新
+    loadTop() {
+      console.log('下拉刷新')
+      var that = this
+      setTimeout(function() {
+        that.$refs.loadmoreMain.onTopLoaded()
+      }, 3000)
+    },
     // 上拉加载
     loadBottom() {
       console.log('上拉加载')
-    },
-    // 点击商品 进入商品详情页
-    goodsDetails(data) {
-      console.log('点击商品 进入商品详情页')
-      console.log(data)
-      this.$router.push({ name: 'goodsDetails' })
+      var that = this
+      setTimeout(function() {
+        that.goodsList.push(1, 2, 3)
+        // 重新定位 (mint-ui自带)
+        that.$refs.loadmore.onBottomLoaded()
+      }, 3000)
     }
   },
   mounted() {
@@ -139,78 +158,84 @@ export default {
 
 <style lang="less" scoped>
 @import url('../../common/less/variable');
-
-.main {
+.main-box {
   position: absolute;
   top: 1.333333rem;
   left: 0;
   right: 0;
   bottom: 1.333333rem;
   overflow: auto;
-  // 轮播图
-  .swiper {
-    height: 3.733333rem;
-    .swiper-img {
-      width: 100%;
-      height: 100%;
-    }
-  }
-  // nav 吸顶
-  .isFixed {
-    position: fixed !important;
-    top: 1.333333rem;
-    left: 0;
-    right: 0;
-    z-index: 1;
-  }
-  .goods-Ceiling {
-    margin-top: 1.333333rem;
-  }
-  //   nav
-  .nav {
-    // 导航栏
-    position: relative;
-    .nav-box {
-      height: 1.226667rem;
-      overflow: auto;
-      display: flex;
-      flex-wrap: wrap;
-
-      .nav-item {
-        flex-grow: 0;
-        flex-basis: 20%;
-      }
-      // mint-ui item 默认样式修改
-      .is-selected {
-        border-bottom: none;
-        margin-bottom: 0;
+  .main {
+    width: 100%;
+    height: 100%;
+    // 轮播图
+    .swiper {
+      height: 3.733333rem;
+      .swiper-img {
+        width: 100%;
+        height: 100%;
       }
     }
-    // nav 展开样式
-    .an-nav-box {
-      height: auto;
-    }
-    // 大于5个 展开按钮样式
-    .an-icon {
-      width: 20%;
-      height: 1.226667rem;
-      background-color: #fff;
-      text-align: center;
-      position: absolute;
+    // nav 吸顶
+    .isFixed {
+      position: fixed !important;
+      top: 1.333333rem;
+      left: 0;
       right: 0;
-      top: 0;
-      & i {
-        font-size: @font-size-medium-x;
-        line-height: 1.226667rem;
-        display: inline-block;
-        vertical-align: bottom;
+      z-index: 1;
+    }
+    .goods-Ceiling {
+      margin-top: 1.333333rem;
+    }
+    //   nav
+    .nav {
+      // 导航栏
+      position: relative;
+      .nav-box {
+        height: 46px;
+        overflow: auto;
+        display: flex;
+        flex-wrap: wrap;
+
+        .nav-item {
+          flex-grow: 0;
+          flex-basis: 20%;
+        }
+        // mint-ui item 默认样式修改
+        .is-selected {
+          border-bottom: none;
+          margin-bottom: 0;
+        }
+      }
+      // nav 展开样式
+      .an-nav-box {
+        height: auto;
+      }
+      // 大于5个 展开按钮样式
+      .an-icon {
+        width: 20%;
+        height: 46px;
+        background-color: #fff;
+        text-align: center;
+        position: absolute;
+        right: 0;
+        top: 0;
+        & i {
+          font-size: @font-size-medium-x;
+          line-height: 46px;
+          display: inline-block;
+          vertical-align: bottom;
+          animation: myCSS 1s;
+          animation-fill-mode: forwards;
+        }
+      }
+      // 展开/隐藏时候icon要旋转180°
+      .an-icon-origin {
+        transform: rotate(180deg);
       }
     }
-    // 展开/隐藏时候icon要旋转180°
-    .an-icon-origin {
-      transform: rotate(180deg);
-    }
   }
+
   //   商品栏
   .goods {
     box-sizing: border-box;
@@ -255,6 +280,45 @@ export default {
           }
         }
       }
+    }
+  }
+}
+// 加载提示的样式
+// 下拉刷新
+.index /deep/ .mint-loadmore > div {
+  // transform: translate3d(0px, 30px, 0px);
+  .mint-loadmore-top {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    margin-top: -50px;
+    .mint-loadmore-spinner {
+      vertical-align: super;
+      position: relative;
+      top: 5px;
+    }
+    .mint-loadmore-text {
+      vertical-align: super;
+      font-size: @font-size-small;
+    }
+  }
+}
+
+// 上拉加载
+.goods /deep/ .mint-loadmore > div {
+  .mint-loadmore-bottom {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    margin-bottom: -30px;
+    .mint-loadmore-spinner {
+      vertical-align: super;
+      position: relative;
+      top: 5px;
+    }
+    .mint-loadmore-text {
+      vertical-align: super;
+      font-size: @font-size-small;
     }
   }
 }

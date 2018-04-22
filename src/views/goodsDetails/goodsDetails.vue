@@ -1,49 +1,51 @@
 <template>
-    <div class="goods" :style="{height: style.goodsHeight + 'px'}" ref="goods">
-        <headerui :title="title" :back="true"></headerui>
-        <div class="goods-img">
-            <img src="../../assets/swiper3.jpg" alt="">
-        </div>
-        <!-- 商品信息 -->
-        <div class="goods-info">
-            <div class="goods-name">商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称</div>
-            <div class="goods-prices">888.88 积分</div>
-        </div>
-        <!-- 上滑 拉出图文详情 -->
-        <div class="goods-touch" ref="promptText" @touchstart="goodsTouchstart" @touchmove="goodsTouchmove" @touchend="goodsTouchend">
-            上拉此模块，查看图文详情
-        </div>
-        <!-- 图文详情 -->
-        <div :class="{'goods-details': true}" :style="{top: style.detailsTop + 'px'}" ref="details" @touchstart.stop="presentationTouchstart" @touchmove.stop="presentationTouchmove" @touchend.stop="presentationTouchend">
-            <mt-navbar v-model="selected" class="nav-box">
-                <button :class="{btn: true, active: index == idn}" v-for="(n,index) in 3" :id="n" @click="clickNav(n,index)">
-                    <span>{{n}}</span>
-                </button>
-            </mt-navbar>
+  <div class="goods" :style="{height: style.goodsHeight + 'px'}" ref="goods">
+    <headerui :title="title" :back="true" ref="headerui"></headerui>
 
-            <!-- tab-container -->
-            <mt-tab-container v-model="selected" class="nav-item">
-                <mt-tab-container-item id="1">
-                    <mt-cell v-for="n in 1" :title="'内容 ' + n" :key="n"/>
-                </mt-tab-container-item>
-                <mt-tab-container-item id="2">
-                    <mt-cell v-for="n in 10" :title="'测试 ' + n" :key="n"/>
-                </mt-tab-container-item>
-                <mt-tab-container-item id="3">
-                    <mt-cell v-for="n in 15" :title="'选项 ' + n" :key="n">1111</mt-cell>
-                </mt-tab-container-item>
-            </mt-tab-container>
-        </div>
-        <footer-pay @click.native='clickFooterPay'></footer-pay>
+    <div class="goods-index" @touchstart="goodsTouchstart" @touchmove="goodsTouchmove" @touchend="goodsTouchend">
+      <div class="goods-img">
+        <img src="../../assets/swiper3.jpg" alt="">
+      </div>
+      <!-- 商品信息 -->
+      <div class="goods-info">
+        <div class="goods-name">商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称</div>
+        <div class="goods-prices">888.88 积分</div>
+      </div>
+      <!-- 上滑 拉出图文详情 -->
+      <div class="goods-touch" ref="promptText" @touchstart="goodsTouchstart" @touchmove="goodsTouchmove" @touchend="goodsTouchend">
+        上拉此模块，查看图文详情
+      </div>
     </div>
+
+    <!-- 图文详情 -->
+    <div :class="{'goods-details': true}" :style="{top: style.detailsTop + 'px'}" ref="details" @touchstart.stop="presentationTouchstart" @touchmove.stop="presentationTouchmove" @touchend.stop="presentationTouchend">
+      <mt-navbar v-model="selected" class="nav-box">
+        <button :class="{btn: true, active: index == idn}" v-for="(n,index) in 3" :id="n" @click="clickNav(n,index)">
+          <span>{{n}}</span>
+        </button>
+      </mt-navbar>
+
+      <!-- tab-container -->
+      <mt-tab-container v-model="selected" class="nav-item">
+        <mt-tab-container-item id="1">
+          <mt-cell v-for="n in 1" :title="'内容 ' + n" :key="n" />
+        </mt-tab-container-item>
+        <mt-tab-container-item id="2">
+          <mt-cell v-for="n in 10" :title="'测试 ' + n" :key="n" />
+        </mt-tab-container-item>
+        <mt-tab-container-item id="3">
+          <mt-cell v-for="n in 15" :title="'选项 ' + n" :key="n">1111</mt-cell>
+        </mt-tab-container-item>
+      </mt-tab-container>
+    </div>
+    <footer-pay @click.native='clickFooterPay'></footer-pay>
+  </div>
 </template>
 
 <script>
 import headerui from 'components/headerui/headerui'
 import footerPay from 'components/footer-pay/footer-pay'
 
-// 上 header 下pay都一样高,用一个就够了
-var topHeight = 50
 export default {
   data() {
     return {
@@ -159,7 +161,9 @@ export default {
   mounted() {
     // 获取手机屏幕高度
     console.log(document.documentElement.clientHeight)
-    var height = document.documentElement.clientHeight - topHeight * 2 + 1
+    // 减去上下headerui和tabbar高度
+    var topHeight = this.$refs.headerui.$el.clientHeight
+    var height = document.documentElement.clientHeight - topHeight + 51 // 底部tabbar固定51
     this.style.goodsHeight = height // main 高度 (除了上下)
     this.style.detailsTop = height // details top
 
@@ -184,46 +188,51 @@ export default {
   overflow: hidden;
   margin-top: 1.333333rem;
   position: relative;
-  .goods-img {
+  .goods-index {
     width: 100%;
-    height: 8rem;
-    & img {
+    height: 100%;
+    .goods-img {
       width: 100%;
-      height: 100%;
+      height: 8rem;
+      & img {
+        width: 100%;
+        height: 100%;
+      }
     }
-  }
-  .goods-info {
-    text-align: left;
-    padding-left: 0.533333rem;
-    padding-right: 0.533333rem;
-    margin-top: 0.533333rem;
-    margin-bottom: 0.266667rem;
-    .goods-name {
-      font-size: @font-size-medium-x;
-      line-height: 0.533333rem;
-      //多于两行隐藏,并显示省略号
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box; //将元素设为盒子伸缩模型显示
-      -webkit-box-orient: vertical; //伸缩方向设为垂直方向
-      -webkit-line-clamp: 2; //超出3行隐藏，并显示省略号
+    .goods-info {
+      text-align: left;
+      padding-left: 0.533333rem;
+      padding-right: 0.533333rem;
+      margin-top: 0.533333rem;
+      margin-bottom: 0.266667rem;
+      .goods-name {
+        font-size: @font-size-medium-x;
+        line-height: 0.533333rem;
+        //多于两行隐藏,并显示省略号
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box; //将元素设为盒子伸缩模型显示
+        -webkit-box-orient: vertical; //伸缩方向设为垂直方向
+        -webkit-line-clamp: 2; //超出3行隐藏，并显示省略号
+      }
+      .goods-prices {
+        font-size: @font-size-small;
+        color: @color-dialog-background;
+        margin-top: 0.266667rem;
+      }
     }
-    .goods-prices {
-      font-size: @font-size-small;
+    .goods-touch {
+      font-size: @font-size-medium;
       color: @color-dialog-background;
-      margin-top: 0.266667rem;
+      line-height: 1.066667rem;
+      background-color: @color-background-d;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
     }
   }
-  .goods-touch {
-    font-size: @font-size-medium;
-    color: @color-dialog-background;
-    line-height: 1.066667rem;
-    background-color: @color-background-d;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
+
   // 图文详情页
   .goods-details {
     width: 100%;
