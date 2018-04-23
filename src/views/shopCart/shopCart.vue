@@ -12,8 +12,8 @@
       <div class="address">
         <!-- 地址为空时显示 -->
         <!-- <div class="address-null" @click="addAddress">
-                    填写收货地址
-                </div> -->
+          <mt-button size="normal" plain>+ 填写收货地址</mt-button>
+        </div> -->
         <!-- 地址不为空时显示 -->
         <div class="address-main" @click="editAddress">
           <div class="main-box">
@@ -171,7 +171,7 @@ export default {
   height: 100vh;
   box-sizing: border-box;
   padding: 1.333333rem 0;
-  background-color: aquamarine;
+  background-color: @color-background-d;
   // null 样式
   .null {
     width: 60%;
@@ -194,9 +194,10 @@ export default {
     .address {
       width: 100%;
       max-height: 2.773333rem;
-      background-color: @color-footer-pay-background;
+      background-color: @color-background;
       font-size: @font-size-small;
-      color: @color-background;
+      color: @color-text;
+      margin-bottom: 0.4rem;
       // 若地址为空
       .address-null {
         line-height: 2.773333rem;
@@ -216,6 +217,7 @@ export default {
           }
           .user-address {
             line-height: 0.533333rem;
+            color: @color-dialog-background;
             //多于两行隐藏,并显示省略号
             overflow: hidden;
             text-overflow: ellipsis;
@@ -231,10 +233,10 @@ export default {
     }
     // 商品列表
     .commodity-list {
-      background-color: @color-highlight-background;
+      background-color: @color-background;
       //   每条商品
       .comm-item {
-        border-bottom: 1px solid @color-footer-pay-background;
+        border-bottom: 1px solid @color-background-d;
         padding: 0.373333rem 0.266667rem 0;
         display: flex;
         justify-content: space-between;
@@ -281,9 +283,11 @@ export default {
             }
           }
           .info-del {
-            width: 20%;
+            width: 17%;
+            font-size: @font-size-small-s;
+            color: @color-sub-theme;
             text-align: center;
-            border: 1px solid @color-text;
+            border: 1px solid @color-sub-theme;
             border-radius: 5px;
             background-color: @color-background;
             position: absolute;
@@ -307,7 +311,8 @@ export default {
     // 提交订单
     .submit-order {
       height: 1.253333rem;
-      background-color: hotpink;
+      background-color: @color-background;
+      border-top: 1px solid @color-background-d;
       padding: 0 0.533333rem 0 0.266667rem;
       position: fixed;
       left: 0;
@@ -315,14 +320,20 @@ export default {
       bottom: 50px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       .order-prices {
         font-size: @font-size-small-s;
         color: @color-dialog-background;
         line-height: 0.626667rem;
       }
       .order-btn {
-        font-size: @font-size-medium;
-        line-height: 1.253333rem;
+        height: 0.64rem;
+        font-size: @font-size-small;
+        color: @color-sub-theme;
+        line-height: 0.64rem;
+        border: 1px solid @color-sub-theme;
+        border-radius: 0.16rem;
+        padding: 0.08rem 0.16rem;
       }
     }
     // 底部弹出框(提交确认)

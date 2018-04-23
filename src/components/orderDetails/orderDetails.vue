@@ -46,7 +46,7 @@ export default {
 
 .order-details {
   font-size: @font-size-small;
-  background-color: aquamarine;
+  background-color: @color-background-d;
   overflow: auto;
   position: fixed;
   top: 1.333333rem;
@@ -54,7 +54,7 @@ export default {
   left: 0;
   right: 0;
   .address {
-    background-color: @color-footer-pay-background;
+    background-color: @color-background;
     padding: 0.4rem 0.266667rem;
     margin-bottom: 0.266667rem;
     .user-name {
@@ -75,14 +75,14 @@ export default {
 
   .order-info {
     min-height: 2.666667rem;
-    background-color: @color-footer-pay-background;
+    background-color: @color-background;
     line-height: 0.8rem;
     padding: 0.4rem 0.266667rem;
     margin-bottom: 0.5rem;
   }
 
   .commodity {
-    background-color: antiquewhite;
+    background-color: @color-background;
     padding: 0.4rem 0.266667rem;
     margin-bottom: 0.053333rem;
     display: flex;

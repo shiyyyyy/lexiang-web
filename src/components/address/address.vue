@@ -9,8 +9,7 @@
         {{currentArea[0] + '-'}}{{currentArea[1] + '-'}}{{currentArea[2]}}
       </span>
     </mt-cell>
-    <mt-field label="详细地址" v-model="userInfo.detailAddress"></mt-field>
-    <mt-field label="自我介绍" placeholder="自我介绍" type="textarea" rows="2" v-modal="userInfo.detailAddress"></mt-field>
+    <mt-field label="详细地址" placeholder="自我介绍" type="textarea" rows="2" v-model="userInfo.detailAddress" class="textarea"></mt-field>
 
     <!-- 底部保存并使用 -->
     <footer-pay title="保存并使用" @click.native="saveAndUse"></footer-pay>
@@ -135,7 +134,9 @@ export default {
   background-color: #fff;
   z-index: 1111;
 }
-
+.textarea /deep/ .mint-cell-wrapper{
+  align-items: baseline;
+}
 // 底部弹出 级联选择器样式
 .popup {
   width: 100%;

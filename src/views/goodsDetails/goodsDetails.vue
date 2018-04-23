@@ -163,7 +163,7 @@ export default {
     console.log(document.documentElement.clientHeight)
     // 减去上下headerui和tabbar高度
     var topHeight = this.$refs.headerui.$el.clientHeight
-    var height = document.documentElement.clientHeight - topHeight + 51 // 底部tabbar固定51
+    var height = document.documentElement.clientHeight - (topHeight + 50) // 底部footer-pay固定50
     this.style.goodsHeight = height // main 高度 (除了上下)
     this.style.detailsTop = height // details top
 

@@ -2,13 +2,13 @@
   <div class="footer">
     <mt-tabbar v-model="select" class="footer-bar">
       <mt-tab-item id="首页">
-        <img slot="icon" src="../../assets/首页.png"> 首页
+        <img slot="icon" :src="tabbarImg1"> 首页
       </mt-tab-item>
       <mt-tab-item id="购物车">
-        <img slot="icon" src="../../assets/首页.png"> 购物车
+        <img slot="icon" :src="tabbarImg2"> 购物车
       </mt-tab-item>
       <mt-tab-item id="我的">
-        <img slot="icon" src="../../assets/首页.png"> 我的
+        <img slot="icon" :src="tabbarImg3"> 我的
       </mt-tab-item>
     </mt-tabbar>
   </div>
@@ -27,6 +27,26 @@ export default {
     return {
       // 解耦
       select: this.selected
+    }
+  },
+  computed: {
+    // 图片地址
+    tabbarImg1() {
+      return this.select === '首页'
+        ? require('../../common/images/tabbar/01.png')
+        : require('../../common/images/tabbar/1.png')
+    },
+
+    tabbarImg2() {
+      return this.select === '购物车'
+        ? require('../../common/images/tabbar/02.png')
+        : require('../../common/images/tabbar/2.png')
+    },
+
+    tabbarImg3() {
+      return this.select === '我的'
+        ? require('../../common/images/tabbar/03.png')
+        : require('../../common/images/tabbar/3.png')
     }
   },
   watch: {
@@ -56,7 +76,6 @@ export default {
   bottom: 0;
   z-index: 1000;
   & /deep/ .footer-bar {
-
     .mint-tab-item {
       padding: 5px 0;
     }

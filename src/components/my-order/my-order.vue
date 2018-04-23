@@ -56,17 +56,18 @@ export default {
   left: 0;
   right: 0;
   bottom: 1.333333rem;
-  background-color: hotpink;
+  background-color: @color-background-d;
   .order-list {
     width: 100%;
     height: 100%;
     overflow: auto;
     .order-item {
       font-size: @font-size-small;
-      color: @color-dialog-background;
+      color: @color-text;
       padding: 0 0.266667rem;
-      background-color: #ccc;
+      background-color: @color-background;
       margin-bottom: 10px;
+      margin-top: 10px;
       .item-header {
         display: flex;
         justify-content: space-between;
@@ -94,6 +95,7 @@ export default {
       }
       .item-total-integral {
         line-height: 1.066667rem;
+        color: @color-dialog-background;
       }
     }
   }
