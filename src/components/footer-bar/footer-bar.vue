@@ -4,8 +4,8 @@
       <mt-tab-item id="首页">
         <img slot="icon" :src="tabbarImg1"> 首页
       </mt-tab-item>
-      <mt-tab-item id="购物车">
-        <img slot="icon" :src="tabbarImg2"> 购物车
+      <mt-tab-item id="地址">
+        <img slot="icon" :src="tabbarImg2"> 地址
       </mt-tab-item>
       <mt-tab-item id="我的">
         <img slot="icon" :src="tabbarImg3"> 我的
@@ -38,9 +38,9 @@ export default {
     },
 
     tabbarImg2() {
-      return this.select === '购物车'
-        ? require('../../common/images/tabbar/02.png')
-        : require('../../common/images/tabbar/2.png')
+      return this.select === '地址'
+        ? require('../../common/images/tabbar/04.png')
+        : require('../../common/images/tabbar/4.png')
     },
 
     tabbarImg3() {
@@ -55,8 +55,8 @@ export default {
       console.log(val)
       if (val === '首页') {
         this.$router.push({ name: 'index' })
-      } else if (val === '购物车') {
-        this.$router.push({ name: 'shopCart' })
+      } else if (val === '地址') {
+        this.$router.push({ name: 'address' })
       } else {
         this.$router.push({ name: 'my' })
       }

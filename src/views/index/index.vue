@@ -17,27 +17,27 @@
       <!-- nav栏 && 商品栏-->
       <div class="nav" :class="{isFixed: Fixed}" ref="nav">
         <mt-navbar v-model="selected" :class="{'nav-box': true, 'an-nav-box': allNav}" @click.native="clickNav">
-          <mt-tab-item v-for="(item, index) in navList" :id="index" class="nav-item" :key="index">
-            选项{{item}}
+          <mt-tab-item v-for="(item, index) in data.category" :id="item" class="nav-item" :key="index">
+            {{item}}
           </mt-tab-item>
         </mt-navbar>
         <!-- 展开icon 大于5时显示,否则隐藏 class是展开/隐藏时候icon要旋转180°-->
-        <div class="an-icon" v-if="navList.length > 5" @click="anNav">
-          <i :class="{'an-icon-origin': allNav}">↓</i>
+        <div class="an-icon" v-if="navN > 5" @click="anNav">
+          <i :class="{'an-icon-origin': allNav}" class="iconfont icon-xia"></i>
         </div>
       </div>
       <!-- 商品栏 -->
       <div class="goods" :class="{'goods-Ceiling': Fixed}">
-        <mt-loadmore :bottom-method="loadBottom" :bottom-all-loaded="false" :bottomDistance='50' ref="loadmore">
+        <mt-loadmore :bottom-method="loadBottom" :bottom-all-loaded="true" :bottomDistance='50' ref="loadmore">
           <mt-tab-container v-model="selected" class="item-box">
-            <mt-tab-container-item v-for="(item, index) in navList" :id="index" class="item" :key="index">
-              <div class="item-main" v-for="(ite,i) in goodsList" @click="goodsDetails(ite,index)" :key="i">
+            <mt-tab-container-item v-for="(item, index) in data.goods" :id="index" class="item" :key="index">
+              <div class="item-main" v-for="(ite,i) in item" @click="goodsDetails(ite,index)" :key="i">
                 <div class="goods-img">
-                  <img src="../../assets/swiper2.jpg" alt="">
+                  <img :src="'http://tlink.cc/po-back/' + ite.pic" alt="">
                 </div>
                 <div class='goods-info'>
-                  <span class="goods-name"> 商品名称 </span>
-                  <span class="goods-prices"> 888.88 积分</span>
+                  <span class="goods-name"> {{ite.name}} </span>
+                  <span class="goods-prices"> {{ite.point}} 积分</span>
                 </div>
               </div>
             </mt-tab-container-item>
@@ -56,7 +56,8 @@
 import headerui from 'components/headerui/headerui'
 import footerBar from 'components/footer-bar/footer-bar'
 // 请求
-import { request } from 'common/js/request'
+import { request, requestGet } from 'common/js/request'
+import bus from 'common/js/bus'
 
 export default {
   data() {
@@ -64,7 +65,7 @@ export default {
       // 头部标题
       title: '乐享积分-首页',
       // nav 选中标签的id '1'/'2'/'3'
-      selected: 0,
+      selected: '话费卡',
       // nav 数组
       navList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
       // 商品数组
@@ -74,7 +75,11 @@ export default {
       // 刚开始未吸顶时候,offsetTop的高度
       offsetTop: 0,
       // nav 是否在展开状态
-      allNav: false
+      allNav: false,
+      // 返回数据
+      data: {},
+      // n nav数量
+      navN: 0
     }
   },
   methods: {
@@ -119,7 +124,7 @@ export default {
     goodsDetails(item, index) {
       console.log('点击商品 进入商品详情页')
       console.log(item, index)
-      this.$router.push({ name: 'goodsDetails', params: { id: index } })
+      this.$router.push({ name: 'goodsDetails', params: { id: item.id } })
     },
     // 下拉刷新
     loadTop() {
@@ -133,17 +138,29 @@ export default {
     loadBottom() {
       console.log('上拉加载')
       var that = this
-      setTimeout(function() {
+      // setTimeout(function() {
         that.goodsList.push(1, 2, 3)
         // 重新定位 (mint-ui自带)
         that.$refs.loadmore.onBottomLoaded()
-      }, 3000)
+      // }, 3000)
     }
   },
   mounted() {
     console.log(this.$refs)
     // 添加一个监听滚动事件 叫handleScroll 写在methods里
     this.$refs.main.addEventListener('scroll', this.handleScroll)
+    // 请求
+    var url = '/wel/Shop/portal'
+    requestGet(url, {}).then(res => {
+      this.data = res.data
+      console.log(this)
+      // 没办法,只能通过这种笨办法来判断nav是不是大于5个了
+      var n = 0
+      for(var k in res.goods){
+        ++n
+      }
+      this.navN = n
+    })
   },
   components: {
     footerBar,
@@ -193,7 +210,7 @@ export default {
     position: relative;
     .nav-box {
       height: 46px;
-      overflow: auto;
+      overflow: hidden;
       display: flex;
       flex-wrap: wrap;
 

@@ -22,6 +22,7 @@
 
 <script>
 import headerui from 'components/headerui/headerui'
+import { request } from 'common/js/request'
 
 export default {
   data() {

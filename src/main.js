@@ -5,20 +5,24 @@ import Vue from 'vue'
 import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 // 引入字体图标
-import 'common/fonts/font_634091_582w0uvnxr2uik9/iconfont.css'
+import 'common/fonts/font_634091_15kv05sf9gj5rk9/iconfont.css'
 
 import App from './App'
 import router from './router'
 
 Vue.config.productionTip = false
 
-
-
+const Bus = new Vue()
 Vue.use(MintUI)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  data: {
+    Bus
+  },
   router,
-  components: { App },
+  components: {
+    App
+  },
   template: '<App/>'
 })

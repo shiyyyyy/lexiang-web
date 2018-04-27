@@ -1,39 +1,47 @@
 <template>
-    <div class="order-details">
-        <headerui title="乐享积分-订单详情" :back="true"></headerui>
-        <!-- 地址 -->
-        <div class="address">
-            <div class="user-name">王尼玛</div>
-            <div class="user-mobile">18877776666</div>
-            <div class="user-address">北京市北京市朝阳区潘家园大厦3层北区营销中心屋里信息部-北京市北京市朝阳区潘家园大厦3层北区营销中心屋里信息部</div>
-        </div>
-        <!-- 订单信息 -->
-        <div class="order-info">
-            <div class="order-num">订单编号：2018042116310000</div>
-            <div class="order-integral">合计积分：666 积分</div>
-            <div class="order-type">订单状态：待确认</div>
-        </div>
-        <!-- 商品列表 -->
-        <div class="commodity" v-for="(value, index) in commodityList">
-            <div class="commodity-img">
-                <img src="../../assets/swiper3.jpg" alt="">
-            </div>
-            <div class="commodity-info">
-                <div class="commodity-name">厕纸斜挎包-青青草原版遮阳帽-屎味巧克力-皇帝的新装同款内衣裤-变态死大头头套</div>
-                <div class="commodity-num">x 20</div>
-            </div>
-        </div>
+  <div class="order-details">
+    <headerui title="乐享积分-订单详情" :back="true"></headerui>
+    <!-- 地址 -->
+    <div class="address">
+      <div class="user-name">王尼玛</div>
+      <div class="user-mobile">18877776666</div>
+      <div class="user-address">北京市北京市朝阳区潘家园大厦3层北区营销中心屋里信息部-北京市北京市朝阳区潘家园大厦3层北区营销中心屋里信息部</div>
     </div>
+    <!-- 订单信息 -->
+    <div class="order-info">
+      <div class="order-num">订单编号：D0{{detail.id}}</div>
+      <div class="order-integral">合计积分：{{detail.point}} 积分</div>
+      <div class="order-type">订单状态：{{ detail.state === '1' ? '待确认' : '已确认'}}</div>
+    </div>
+    <!-- 商品列表 -->
+    <!-- 想要遍历就用注释的,把底下的不到for的删除然后打开注释,别的不用管 -->
+    <!-- <div class="commodity" v-for="(value, index) in commodityList"> -->
+    <div class="commodity">      
+      <div class="commodity-img">
+        <img :src="'http://tlink.cc/po-back/' + detail.pic" alt="">
+      </div>
+      <div class="commodity-info">
+        <div class="commodity-name">{{detail.goods_name}}</div>
+        <div class="commodity-num">x {{detail.quantity}}</div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import headerui from 'components/headerui/headerui'
-
+import bus from 'common/js/bus'
 export default {
+  props:['detail'],
   data() {
     return {
       commodityList: [1, 2, 3, 4, 5, 6, 7]
     }
+  },
+  created() {
+    var that = this
+    console.log('created')
+    console.log(this)
   },
   components: {
     headerui

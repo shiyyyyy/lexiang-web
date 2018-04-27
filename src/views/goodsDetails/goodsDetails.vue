@@ -4,37 +4,47 @@
 
     <div class="goods-index" @touchstart="goodsTouchstart" @touchmove="goodsTouchmove" @touchend="goodsTouchend">
       <div class="goods-img">
-        <img src="../../assets/swiper3.jpg" alt="">
+        <img :src="imgUrl" v-cloak alt="">
       </div>
       <!-- 商品信息 -->
       <div class="goods-info">
-        <div class="goods-name">商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称-商品名称</div>
-        <div class="goods-prices">888.88 积分</div>
+        <div class="goods-name" v-html="goodDetail.name"></div>
+        <div class="goods-prices">{{goodDetail.point}} 积分</div>
+      </div>
+      <!-- 商品数量 -->
+      <div class="goods-number">
+        <div>数量:</div>
+        <div class="add-num" @click.stop="subNumber">-</div>
+        <div class="goods-num">{{goodNumber}}</div>
+        <div class="sub-num" @click.stop="addNumber">+</div>
       </div>
       <!-- 上滑 拉出图文详情 -->
       <div class="goods-touch" ref="promptText" @touchstart="goodsTouchstart" @touchmove="goodsTouchmove" @touchend="goodsTouchend">
-        上拉此模块，查看图文详情
+        上拉查看图文详情
       </div>
     </div>
 
     <!-- 图文详情 -->
     <div :class="{'goods-details': true}" :style="{top: style.detailsTop + 'px'}" ref="details" @touchstart.stop="presentationTouchstart" @touchmove.stop="presentationTouchmove" @touchend.stop="presentationTouchend">
       <mt-navbar v-model="selected" class="nav-box">
-        <button :class="{btn: true, active: index == idn}" v-for="(n,index) in 3" :id="n" @click="clickNav(n,index)">
-          <span>{{n}}</span>
+        <button :class="{btn: true, active: index == idn}" v-for="(item,index) in navArr" :id="index + ''" @click="clickNav(item,index)">
+          <span>{{item}}</span>
         </button>
       </mt-navbar>
 
       <!-- tab-container -->
       <mt-tab-container v-model="selected" class="nav-item">
+        <mt-tab-container-item id="0">
+          <div v-html="goodDetail.desc">
+          </div>
+        </mt-tab-container-item>
         <mt-tab-container-item id="1">
-          <mt-cell v-for="n in 1" :title="'内容 ' + n" :key="n" />
+          <div v-html="goodDetail.spec">
+          </div>
         </mt-tab-container-item>
         <mt-tab-container-item id="2">
-          <mt-cell v-for="n in 10" :title="'测试 ' + n" :key="n" />
-        </mt-tab-container-item>
-        <mt-tab-container-item id="3">
-          <mt-cell v-for="n in 15" :title="'选项 ' + n" :key="n">1111</mt-cell>
+          <div v-html="goodDetail.package">
+          </div>
         </mt-tab-container-item>
       </mt-tab-container>
     </div>
@@ -45,12 +55,21 @@
 <script>
 import headerui from 'components/headerui/headerui'
 import footerPay from 'components/footer-pay/footer-pay'
+import bus from 'common/js/bus'
+import { request, requestGet } from 'common/js/request'
+import { Toast } from 'mint-ui'
 
 export default {
   data() {
     return {
+      // 商品详情
+      goodDetail: {},
+      // 商品数量
+      goodNumber: 1,
       // 头部标题
       title: '乐享积分-商品详情',
+      // 商品详情控件
+      navArr: ['商品介绍', '规格参数', '包装售后'],
       // html样式 控件
       style: {
         // 内容高度
@@ -81,9 +100,10 @@ export default {
   },
   methods: {
     // 切换 nav
-    clickNav(n, index) {
+    clickNav(item, index) {
       console.log('切换nav')
-      this.selected = n + ''
+      console.log(item, index)
+      this.selected = index + ''
       this.idn = index
     },
     // 监听 图文详情页 滚动事件
@@ -94,9 +114,34 @@ export default {
       console.log(scrollTop)
       this.scrollTop = scrollTop
     },
+    // + - 商品数量
+    addNumber() {
+      console.log('商品数量+1')
+      if (this.goodNumber < 10) {
+        this.goodNumber += 1
+      }
+    },
+    subNumber() {
+      console.log('商品数量-1')
+      if (this.goodNumber > 1) {
+        this.goodNumber -= 1
+      }
+    },
     // 底部 立即兑换 按钮
     clickFooterPay() {
       console.log('底部 兑换/确定地址')
+      console.log(this)
+      var url = '/wel/Shop/order_req'
+      var data = {
+        goods_id: parseInt(this.goodDetail.id),
+        quantity: this.goodNumber
+      }
+      request(url, data).then(res => {
+        console.log(res)
+        if (res.success) {
+          Toast('兑换成功')
+        }
+      })
     },
     // 商品页 拉动 事件
     goodsTouchstart(e) {
@@ -156,9 +201,28 @@ export default {
   computed: {
     active(index) {
       return index === this.index
+    },
+    imgUrl() {
+      if (this.goodDetail.pic) {
+        return 'http://tlink.cc/po-back/' + this.goodDetail.pic
+      }else{
+        return null
+      }
     }
   },
   mounted() {
+    // 请求 商品 详情
+    var id = this.$route.params.id
+    var url = '/wel/Shop/goods_detail'
+    // var data = { id: id }
+    requestGet(url, {
+      // params: {
+      id: id
+      // }
+    }).then(res => {
+      this.goodDetail = res.data
+    })
+
     // 获取手机屏幕高度
     console.log(document.documentElement.clientHeight)
     // 减去上下headerui和tabbar高度
@@ -184,6 +248,9 @@ export default {
 
 <style scoped lang='less'>
 @import url('../../common/less/variable');
+[v-cloak] {
+  display: none;
+}
 .goods {
   overflow: hidden;
   margin-top: 1.333333rem;
@@ -221,6 +288,21 @@ export default {
         margin-top: 0.266667rem;
       }
     }
+    .goods-number {
+      line-height: 30px;
+      padding-left: 20px;
+      font-size: 16px;
+      display: flex;
+      & div:nth-last-child(-n + 3) {
+        width: 25px;
+      }
+      .add-num,
+      .sub-num {
+        width: 20px;
+      }
+      .goods-num {
+      }
+    }
     .goods-touch {
       font-size: @font-size-medium;
       color: @color-dialog-background;
@@ -241,7 +323,7 @@ export default {
     left: 0;
     right: 0;
     top: 0;
-    background-color: aquamarine;
+    background-color: @color-background-d;
     overflow: auto;
     .nav-box {
       border-bottom: 1px solid @color-background-d;

@@ -1,9 +1,8 @@
 import axios from 'axios'
 
 export function request(url, data) {
-  // var domain = 'localhost/'
-  // var domain = "/po-back/api/"
-  var domain = "/api/po-back/api/"
+  var domain = "/proxy"
+  // var domain = '/po-back'
   var url = domain + url
   var data = Object.assign({}, data, {
 
@@ -17,12 +16,12 @@ export function request(url, data) {
         var res = http_response.data;
         if (res.success) {
           // console.log("正确")
-          return resolve && resolve(res.data)
+          return resolve && resolve(res)
         }
         if (res.message == -1) {
           console.log("未登录,跳转登录页")
           //跳转至login
-          window.location = '/#/login'
+          window.location = './#/login'
         } else {
           // console.log("错误")                
           if (reject) {
@@ -46,7 +45,9 @@ export function request(url, data) {
 export function requestGet(url, data) {
   // var domain = 'localhost/'
   // var domain = "/po-back/api/"
-  var domain = "/api/po-back/api/"
+  var domain = "/proxy"
+  // var domain = '/po-back'
+  
   var url = domain + url
 
   // return axios.get(url, {
@@ -69,12 +70,12 @@ export function requestGet(url, data) {
         var res = http_response.data;
         if (res.success) {
           console.log("正确")
-          return resolve && resolve(res.data)
+          return resolve && resolve(res)
         }
         if (res.message == -1) {
           console.log("未登录,跳转登录页")
           //跳转至login
-          window.location = '/#/login'
+          window.location = './#/login'
         } else {
           console.log("错误")                
           if (reject) {

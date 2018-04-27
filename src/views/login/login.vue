@@ -1,20 +1,20 @@
 <template>
-    <div class="login">
-        <headerui :back="true"></headerui>
-        <div class="login-box">
-            <div class="title">员工登录</div>
-            <div class="input-box">
-                <input class="input" placeholder="手机号码" v-model="mobile" @blur="mobileBlur" />
-                <div class="prompt">{{mobileVal.prompt}}</div>
-                <div class="input">
-                    <input type="number" placeholder="短信验证码" v-model="captcha" @blur="captchaBlur" />
-                    <span @click="obtainCaptcha">获取验证码</span>
-                </div>
-                <div class="prompt">{{captchaVal.prompt}}</div>
-                <mt-button class="btn" size="normal" @click="login">登录</mt-button>
-            </div>
+  <div class="login">
+    <headerui></headerui>
+    <div class="login-box">
+      <div class="title">员工登录</div>
+      <div class="input-box">
+        <input class="input" placeholder="手机号码" v-model="mobile" @blur="mobileBlur" />
+        <div class="prompt">{{mobileVal.prompt}}</div>
+        <div class="input">
+          <input type="number" placeholder="短信验证码" v-model="captcha" @blur="captchaBlur" />
+          <span @click.stop="obtainCaptcha">{{time.buttonName}}</span>
         </div>
+        <div class="prompt">{{captchaVal.prompt}}</div>
+        <mt-button class="btn" size="normal" @click="login">登录</mt-button>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -36,6 +36,12 @@ export default {
       captchaVal: {
         flag: false,
         prompt: ''
+      },
+      time: {
+        // 60S倒计时
+        interval: 60,
+        // 倒计时字段
+        buttonName: '获取验证码'
       }
     }
   },
@@ -44,7 +50,15 @@ export default {
     login() {
       console.log('login')
       if (this.mobileVal.flag && this.captchaVal.flag) {
+        var code = this.captcha
         // 请求函数
+        var url = '/api/WelPub/login/' + code
+        request(url, {}).then(res => {
+          console.log(res)
+          if (res.success) {
+            this.$router.push({ name: 'index' })
+          }
+        })
       }
     },
     // 手机号 失焦 验证
@@ -70,6 +84,26 @@ export default {
     // 点击获取验证码
     obtainCaptcha() {
       console.log('获取验证码')
+      // 点过之后不能再点
+      if (this.time.interval != 60) return
+      this.sendMsg()
+      var url = '/api/WelPub/send_sms/' + this.mobile
+      request(url, {}).then(res => {
+        console.log(res)
+      })
+    },
+    // 发送信息后的间隔时间 事件
+    sendMsg() {
+      let that = this
+      let interval = setInterval(function() {
+        that.time.buttonName = '（' + that.time.interval + '秒）后重新发送'
+        --that.time.interval
+        if (that.time.interval < 0) {
+          that.time.buttonName = '重新发送'
+          that.time.interval = 60
+          clearInterval(interval)
+        }
+      }, 1000)
     }
   },
   components: {
@@ -119,6 +153,7 @@ export default {
         line-height: 0.906667rem;
       }
       & input {
+        width: 100px;
         outline: none;
         -webkit-appearance: none;
         border-radius: 0;

@@ -22,7 +22,7 @@
             <div class="user-address">北京市北京市朝阳区潘家园大厦3层北区营销中心屋里信息部</div>
           </div>
           <div class="edit-icon">
-            <i>></i>
+            <i class="iconfont icon-you you-icon"></i>
           </div>
         </div>
       </div>
@@ -70,13 +70,14 @@
     </div>
     <!-- 子页面 地址显示区域 -->
     <router-view></router-view>
-    <footer-bar selected="购物车"></footer-bar>
+    <footer-bar selected="地址"></footer-bar>
   </div>
 </template>
 
 <script>
 import headerui from 'components/headerui/headerui'
 import footerBar from 'components/footer-bar/footer-bar'
+import { request } from 'common/js/request'
 
 export default {
   data() {
@@ -228,6 +229,14 @@ export default {
         }
         .edit-icon {
           width: 15%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          // 右 箭头
+          .you-icon {
+            font-size: @font-size-large;
+            display: block;
+          }
         }
       }
     }

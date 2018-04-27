@@ -1,6 +1,6 @@
 <template>
   <div class="address">
-    <headerui title="乐享积分-收货地址" :back="true"></headerui>
+    <headerui title="乐享积分-收货地址"></headerui>
     <!-- 主要内容 -->
     <mt-field label="联系人" v-model="userInfo.name"></mt-field>
     <mt-field label="手机号" v-model="userInfo.mobile" type="number"></mt-field>
@@ -9,10 +9,14 @@
         {{currentArea[0] + '-'}}{{currentArea[1] + '-'}}{{currentArea[2]}}
       </span>
     </mt-cell>
-    <mt-field label="详细地址" placeholder="自我介绍" type="textarea" rows="2" v-model="userInfo.detailAddress" class="textarea"></mt-field>
+    <mt-field label="详细地址" placeholder="详细地址" type="textarea" rows="2" v-model="userInfo.detailAddress" class="textarea"></mt-field>
 
+    <!-- 保存地址 -->
+    <div class="keep-btn">
+      <mt-button class="keep-button" type="primary" @click="keepAddress">保存</mt-button>
+    </div>
     <!-- 底部保存并使用 -->
-    <footer-pay title="保存并使用" @click.native="saveAndUse"></footer-pay>
+    <!-- <footer-pay title="保存并使用" @click.native="keepAddress"></footer-pay> -->
     <!-- 省市县 三级联动 -->
     <mt-popup v-model="popupVisible" position="bottom" class="popup">
       <div class="operating">
@@ -29,6 +33,7 @@
 import { CityInfo } from 'common/cityInfo/cityInfo'
 import headerui from 'components/headerui/headerui'
 import footerPay from 'components/footer-pay/footer-pay'
+import { request, requestGet } from 'common/js/request'
 
 export default {
   data() {
@@ -89,11 +94,13 @@ export default {
       console.log(values)
       if (values[0]) {
         picker.setSlotValues(1, values[0].children)
-        picker.setSlotValues(2, values[1].children)
+        if (values[1]) {
+          picker.setSlotValues(2, values[1].children)
+        }
       }
       // 当前选择数组,只有城市名,没有children之类的属性
-      if(values[0] && values[1] && values[2])
-      this.selectArea = [values[0].label, values[1].label, values[2].label]
+      if (values[0] && values[1] && values[2])
+        this.selectArea = [values[0].label, values[1].label, values[2].label]
     },
     // 三级联动 确认 取消
     clickDefine(e) {
@@ -106,8 +113,9 @@ export default {
       this.popupVisible = false
     },
     // 保存并使用
-    saveAndUse() {
+    keepAddress() {
       console.log('保存并使用')
+      console.log(this)
     }
   },
   mounted() {
@@ -134,8 +142,17 @@ export default {
   background-color: #fff;
   z-index: 1111;
 }
-.textarea /deep/ .mint-cell-wrapper{
+.textarea /deep/ .mint-cell-wrapper {
   align-items: baseline;
+}
+// 保存按钮
+.keep-btn {
+  margin-top: 100px;
+  text-align: center;
+  .keep-button {
+    width: 100px;
+    display: inline-block;
+  }
 }
 // 底部弹出 级联选择器样式
 .popup {
