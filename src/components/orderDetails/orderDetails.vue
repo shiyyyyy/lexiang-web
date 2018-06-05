@@ -1,6 +1,6 @@
 <template>
   <div class="order-details">
-    <headerui title="乐享积分-订单详情" :back="true"></headerui>
+    <headerui title="福励云积分-订单详情" :back="true"></headerui>
     <!-- 地址 -->
     <div class="address">
       <div class="user-name">王尼玛</div>

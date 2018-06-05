@@ -1,19 +1,19 @@
 <template>
     <div class="integral">
-        <headerui title="乐享积分-我的积分" :back="true"></headerui>
+        <headerui title="福励云积分-我的积分" :back="true"></headerui>
 
         <div class="main">
             <div class="main-head">
                 <div>
                     我的积分
                     <br /><br />
-                    <span>6666</span>
+                    <span>{{remain || 0}}</span>
                 </div>
             </div>
             <div class="main-content">
-                <mt-cell :title="'已用积分：' + used + ' 积分'" is-link value="消费记录" class="cell" @click.native="toOrder">
+                <mt-cell :title="'已用积分：' + (used || 0) + ' 积分'" is-link value="消费记录" class="cell" @click.native="toOrder">
                 </mt-cell>
-                <mt-cell :title="'剩余积分：' + remain + ' 积分'" is-link value="去换购" class="cell" @click.native="toIndex">
+                <mt-cell :title="'剩余积分：' + (remain || 0) + ' 积分'" is-link value="去换购" class="cell" @click.native="toIndex">
                 </mt-cell>
             </div>
         </div>
@@ -36,11 +36,25 @@ export default {
     // 点击 已用积分 去订单列表
     toOrder() {
       console.log('点击 已用积分 去订单列表')
+      this.$router.push({ name: 'myOrder'})
     },
     // 点击 剩余积分 去首页
     toIndex() {
       console.log('点击 剩余积分 去首页')
+      this.$router.push({ name: 'index'})
     }
+  },
+  created(){
+    var url = '/wel/Shop/user_info'
+    request(url, {}).then(res => {
+      console.log(res)
+        if (res.success) {
+          this.remain = res.data.point 
+          this.used = res.data.spend
+        } else {
+          console.log('出错了')
+        }
+      })
   },
   components: {
     headerui

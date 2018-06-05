@@ -10,7 +10,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: '乐享积分'
+      default: '福励云积分'
     },
     back: {
       type: Boolean,

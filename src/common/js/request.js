@@ -1,8 +1,7 @@
 import axios from 'axios'
 
 export function request(url, data) {
-  var domain = "/proxy"
-  // var domain = '/po-back'
+  var domain = '/po-back'
   var url = domain + url
   var data = Object.assign({}, data, {
 
@@ -45,8 +44,8 @@ export function request(url, data) {
 export function requestGet(url, data) {
   // var domain = 'localhost/'
   // var domain = "/po-back/api/"
-  var domain = "/proxy"
-  // var domain = '/po-back'
+  // var domain = "/proxy"
+  var domain = '/po-back'
   
   var url = domain + url
 

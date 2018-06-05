@@ -48,6 +48,10 @@
         </mt-tab-container-item>
       </mt-tab-container>
     </div>
+
+    <!-- 子路由页面 -->
+    <router-view :goodDetail="goodDetail" :goodNumber="goodNumber"></router-view>
+
     <footer-pay @click.native='clickFooterPay'></footer-pay>
   </div>
 </template>
@@ -55,9 +59,7 @@
 <script>
 import headerui from 'components/headerui/headerui'
 import footerPay from 'components/footer-pay/footer-pay'
-import bus from 'common/js/bus'
 import { request, requestGet } from 'common/js/request'
-import { Toast } from 'mint-ui'
 
 export default {
   data() {
@@ -67,7 +69,7 @@ export default {
       // 商品数量
       goodNumber: 1,
       // 头部标题
-      title: '乐享积分-商品详情',
+      title: '福励云积分-商品详情',
       // 商品详情控件
       navArr: ['商品介绍', '规格参数', '包装售后'],
       // html样式 控件
@@ -93,7 +95,7 @@ export default {
       // 图文页 滚动top
       scrollTop: 0,
       // nav 选中标签的id (使用btn点击更新selected实现切换)
-      selected: '1',
+      selected: '0',
       //   nav 样式控件
       idn: 0
     }
@@ -130,18 +132,7 @@ export default {
     // 底部 立即兑换 按钮
     clickFooterPay() {
       console.log('底部 兑换/确定地址')
-      console.log(this)
-      var url = '/wel/Shop/order_req'
-      var data = {
-        goods_id: parseInt(this.goodDetail.id),
-        quantity: this.goodNumber
-      }
-      request(url, data).then(res => {
-        console.log(res)
-        if (res.success) {
-          Toast('兑换成功')
-        }
-      })
+      this.$router.push({ name: 'pay' })
     },
     // 商品页 拉动 事件
     goodsTouchstart(e) {
@@ -205,7 +196,7 @@ export default {
     imgUrl() {
       if (this.goodDetail.pic) {
         return 'http://tlink.cc/po-back/' + this.goodDetail.pic
-      }else{
+      } else {
         return null
       }
     }

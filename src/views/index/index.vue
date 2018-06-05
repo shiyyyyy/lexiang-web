@@ -8,10 +8,10 @@
       <div class="swiper">
         <mt-swipe :show-indicators="false" :auto="0" @change="swiperChange">
           <mt-swipe-item>
-            <a href="#"><img class="swiper-img" src="../../assets/swiper1.jpg" alt=""></a>
+            <a href="#"><img class="swiper-img" src="../../assets/banner1.png" alt=""></a>
           </mt-swipe-item>
-          <mt-swipe-item><img class="swiper-img" src="../../assets/swiper2.jpg" alt=""></mt-swipe-item>
-          <mt-swipe-item><img class="swiper-img" src="../../assets/swiper3.jpg" alt=""></mt-swipe-item>
+          <mt-swipe-item><img class="swiper-img" src="../../assets/banner2.png" alt=""></mt-swipe-item>
+          <mt-swipe-item><img class="swiper-img" src="../../assets/banner3.png" alt=""></mt-swipe-item>
         </mt-swipe>
       </div>
       <!-- nav栏 && 商品栏-->
@@ -63,7 +63,7 @@ export default {
   data() {
     return {
       // 头部标题
-      title: '乐享积分-首页',
+      title: '福励云积分-首页',
       // nav 选中标签的id '1'/'2'/'3'
       selected: '话费卡',
       // nav 数组

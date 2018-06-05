@@ -5,6 +5,8 @@
     </mt-cell>
     <mt-cell title="我的积分" is-link value="" class="cell" @click.native="toIntegral">
     </mt-cell>
+    <mt-cell title="我的地址" is-link value="" class="cell" @click.native="toAddressList">
+    </mt-cell>
     <!-- 子路由页面 -->
     <router-view></router-view>
 
@@ -26,6 +28,11 @@ export default {
     toIntegral() {
       console.log('跳转积分页')
       this.$router.push({name: 'myIntegral'})      
+    },
+    // 跳转 地址列表
+    toAddressList(){
+      console.log('跳转地址列表')
+      this.$router.push({ name: 'myAddressList' })
     }
   },
   components: {

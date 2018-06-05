@@ -4,9 +4,9 @@
       <mt-tab-item id="首页">
         <img slot="icon" :src="tabbarImg1"> 首页
       </mt-tab-item>
-      <mt-tab-item id="地址">
+      <!-- <mt-tab-item id="地址">
         <img slot="icon" :src="tabbarImg2"> 地址
-      </mt-tab-item>
+      </mt-tab-item> -->
       <mt-tab-item id="我的">
         <img slot="icon" :src="tabbarImg3"> 我的
       </mt-tab-item>
@@ -37,11 +37,11 @@ export default {
         : require('../../common/images/tabbar/1.png')
     },
 
-    tabbarImg2() {
-      return this.select === '地址'
-        ? require('../../common/images/tabbar/04.png')
-        : require('../../common/images/tabbar/4.png')
-    },
+    // tabbarImg2() {
+    //   return this.select === '地址'
+    //     ? require('../../common/images/tabbar/04.png')
+    //     : require('../../common/images/tabbar/4.png')
+    // },
 
     tabbarImg3() {
       return this.select === '我的'
@@ -55,9 +55,11 @@ export default {
       console.log(val)
       if (val === '首页') {
         this.$router.push({ name: 'index' })
-      } else if (val === '地址') {
-        this.$router.push({ name: 'address' })
-      } else {
+      } 
+      // else if (val === '地址') {
+      //   this.$router.push({ name: 'address' })
+      // } 
+      else {
         this.$router.push({ name: 'my' })
       }
     }

@@ -1,6 +1,6 @@
 <template>
   <div class="order">
-    <headerui title="乐享积分-订单列表" :back="true"></headerui>
+    <headerui title="福励云积分-订单列表" :back="true"></headerui>
     <mt-loadmore :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore" class="my-load-more">
 
       <div class="order-list">

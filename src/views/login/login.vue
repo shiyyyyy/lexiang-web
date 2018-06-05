@@ -8,7 +8,7 @@
         <div class="prompt">{{mobileVal.prompt}}</div>
         <div class="input">
           <input type="number" placeholder="短信验证码" v-model="captcha" @blur="captchaBlur" />
-          <span @click.stop="obtainCaptcha">{{time.buttonName}}</span>
+          <button :class="{'val-button': true, 'disabled': disabled}" :disabled="disabled" @click.stop="obtainCaptcha">{{time.buttonName}}</button>
         </div>
         <div class="prompt">{{captchaVal.prompt}}</div>
         <mt-button class="btn" size="normal" @click="login">登录</mt-button>
@@ -42,7 +42,8 @@ export default {
         interval: 60,
         // 倒计时字段
         buttonName: '获取验证码'
-      }
+      },
+      disabled: false
     }
   },
   methods: {
@@ -64,10 +65,8 @@ export default {
     // 手机号 失焦 验证
     mobileBlur() {
       console.log('手机号失焦验证')
-      console.log(this.mobile)
       this.mobileVal.flag = mobileValidation(this.mobile).flag
       this.mobileVal.prompt = mobileValidation(this.mobile).prompt
-      console.log(this.mobileVal)
     },
     // 验证码失焦 验证
     captchaBlur() {
@@ -83,9 +82,10 @@ export default {
     },
     // 点击获取验证码
     obtainCaptcha() {
+      this.mobileBlur()
+      if(!this.mobileVal.flag) return
+      this.disabled = true
       console.log('获取验证码')
-      // 点过之后不能再点
-      if (this.time.interval != 60) return
       this.sendMsg()
       var url = '/api/WelPub/send_sms/' + this.mobile
       request(url, {}).then(res => {
@@ -101,6 +101,8 @@ export default {
         if (that.time.interval < 0) {
           that.time.buttonName = '重新发送'
           that.time.interval = 60
+          that.disabled = false
+          console.log(that.disabled)
           clearInterval(interval)
         }
       }, 1000)
@@ -162,15 +164,22 @@ export default {
         top: 0.346667rem;
         left: 0.266667rem;
       }
-      & span {
+      & .val-button {
         font-size: @font-size-small;
         color: @color-dialog-background;
+        background-color: #fff;
         line-height: 0.533333rem;
+        border: none;
         border-left: 1px solid @color-background-d;
         padding-left: 0.106667rem;
+        outline: none;
         position: absolute;
-        top: 0.293333rem;
-        right: 0.16rem;
+        top: 0;
+        bottom: 0;
+        right: 0;
+      }
+      .disabled {
+        background-color: @color-highlight-background;
       }
     }
     & .btn {

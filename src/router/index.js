@@ -7,17 +7,21 @@ import login from 'views/login/login'
 import index from 'views/index/index'
 // 商品详情
 import goodsDetails from 'views/goodsDetails/goodsDetails'
+import pay from 'components/pay/pay'
+
 // 购物车
 import shopCart from 'views/shopCart/shopCart'
-import address from 'components/address/address'
 
 // 我的
 import my from 'views/my/my'
 import myOrder from 'components/my-order/my-order'
 import orderDetails from 'components/orderDetails/orderDetails'
 
-
 import myIntegral from 'components/my-integral/my-integral'
+
+import myAddressList from 'components/my-address-list/my-address-list'
+import address from 'components/address/address'
+
 
 
 Vue.use(Router)
@@ -42,17 +46,17 @@ export default new Router({
     {
       name: 'goodsDetails',
       path: '/goodsDetails/:id',
-      component: goodsDetails
+      component: goodsDetails,
+      children: [{
+        name: 'pay',
+        path: '/goodsDetails/:id/pay',
+        component: pay
+      }]
     },
     {
       name: 'shopCart',
       path: '/shopCart',
-      component: shopCart,
-      children: [{
-        name: 'address',
-        path: '/shopCart/address',
-        component: address
-      }]
+      component: shopCart
     },
     {
       name: 'my',
@@ -72,6 +76,16 @@ export default new Router({
           name: 'myIntegral',
           path: '/my/myIntegral',
           component: myIntegral
+        },
+        {
+          name: 'myAddressList',
+          path: '/my/myAddressList',
+          component: myAddressList,
+          children: [{
+            name: 'address',
+            path: '/my/myAddressList/address',
+            component: address
+          }]
         }
       ]
     }
